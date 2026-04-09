@@ -14,7 +14,7 @@ export function isAbilitySoundEnabled(id: string) {
 }
 
 export function checkAndPlayAbilitySound(id: string | undefined) {
-  if (id && soundTriggerAbilities.value.includes(id))
+  if (id && isAbilitySoundEnabled(id))
     createNotification({ message: '技能触发提示', sound: 'tip' })
 }
 
