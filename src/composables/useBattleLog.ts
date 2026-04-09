@@ -766,7 +766,7 @@ function handleActionQueue(type: string, data: AttackResultJson, payload?: Resul
     }
 
     const pushedId = hit.subAbility
-      ? hit.subAbility.find(a => a.index === String(payload.ability_sub_param[0]))?.id
+      ? hit.subAbility.find(a => a.index === String(payload.ability_sub_param[0]))?.id ?? hit.id
       : hit.id
     currentRaid.actionQueue.at(-1)?.actionList.push({
       ...hit,
