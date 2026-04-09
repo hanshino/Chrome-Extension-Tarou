@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { battleInfo, battleRecord, combatPanelSetting } from '~/logic'
+import { battleInfo, battleRecord, combatPanelSetting, soundNormalAttack } from '~/logic'
 import NormalAttackInfo from '~/views/sidePanel/views/combat/components/NormalAttackInfo.vue'
 
 const { position } = defineProps<{ position: { x: number, y: number } }>()
@@ -30,6 +30,10 @@ watch(actionQueue, () => {
   >
     <div :class="{ hidden: !isDragging }" class="absolute left-0 top--30px w-150px">
       {{ `X: ${parseInt(x)}, Y: ${parseInt(y)}` }}
+    </div>
+    <div flex items-center gap-2 px-3 py-6px bg-neutral-8 border-b="1 solid #414243">
+      <el-switch v-model="soundNormalAttack" size="small" />
+      <span text-sm text-neutral-3>攻擊後提示音</span>
     </div>
     <el-scrollbar
       ref="scrollbarRef"
@@ -66,7 +70,12 @@ watch(actionQueue, () => {
               </div>
               <div flex flex-1 flex-wrap items-center justify-start gap-10px p-10px border-b="1  solid #414243">
                 <div v-for="action, i in list.actionList" :key="i" fc gap-5px>
-                  <img h-47px :src="getActionIcon(action)">
+                  <img
+                    h-47px
+                    :src="getActionIcon(action)"
+                    :class="action.type === 'ability' && action.id ? [isAbilitySoundEnabled(action.id) ? 'ring-2 ring-yellow-4' : '', 'cursor-pointer rounded-sm'] : ''"
+                    @click.stop="action.type === 'ability' && action.id && toggleAbilitySound(action.id)"
+                  >
                   <template v-if="action.aim?.length">
                     <div class="i-game-icons:fast-forward-button text-xl" />
                     <template v-for="a, n in action.aim" :key="n">
